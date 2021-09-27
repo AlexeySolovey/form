@@ -10,7 +10,8 @@ $response = array(
 if (isset($_POST)) {
     if($_POST['user'] == 'admin' && $_POST['pass'] == 'admin') {
         $response['status'] = 'success';
-        $response['message'] = hash($hash_ver, 'key', false);
+        $response['message'] = 'токен надано!';
+        $response['token'] = hash($hash_ver, 'key', false);
         echo json_encode($response);
         die();
     } else {

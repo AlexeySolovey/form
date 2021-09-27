@@ -188,4 +188,13 @@ $(document).ready(function () {
 		$("#dataTable").DataTable().clear().destroy();
 		renderTable(dataSet);
 	});
+
+	$.ajax({
+		type: "POST",
+		url: '../admin/login.php',
+		data: {user: 'admin', pass: 'admin'},
+		success: (data) => {
+			console.log(data);
+		},
+	  });
 });
