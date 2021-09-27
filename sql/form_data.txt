@@ -1,0 +1,27 @@
+CREATE TABLE `sendform` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+ `lastname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+ `userphone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `useremail` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `area` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `city` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `indexcity` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `department` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `instrument` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ 
+ `form_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `brand` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `modelname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `nc12` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `serialnumber` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `purchasedate` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `fiscalCheck` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `shopname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `cost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `photodownload` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `photo2download` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+ `is_send_news` boolean COLLATE utf8_unicode_ci NOT NULL,
+ `submitted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

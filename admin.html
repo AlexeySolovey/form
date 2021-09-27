@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.css"
+		/>
+		<link rel="stylesheet" href="css/admin.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div class="login" id="loginForm">
+			<div id="form">
+				<h2>Login to admin page</h2>
+				<label for="username">Username</label>
+				<input type="text" name="username" id="username" />
+				<label for="password">Password</label>
+				<input type="text" name="password" id="password" />
+				<button type="submit" id="loginSubmit">login</button>
+			</div>
+		</div>
+		<div class="dataType">
+			<label for="dataType">Тип звіту</label>
+			<select name="dataType" id="dataType">
+				<option value="Whirpool">Whirpool</option>
+				<option value="Indesit">Indesit</option>
+				<option value="Silpo">Silpo</option>
+			</select>
+		</div>
+
+		<div class="dateFilters">
+			<input
+				type="text"
+				name="dateFrom"
+				id="dateFrom"
+				placeholder="yyyy-mm-dd"
+			/>
+			<input type="text" name="dateTo" id="dateTo" placeholder="yyyy-mm-dd" />
+			<button id="dateFilter">Пошук за інтервалом</button>
+		</div>
+		<button id="exportFile">Завантажити у Excel</button>
+
+		<table id="dataTable" class="display"></table>
+
+		<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+		<script
+			type="text/javascript"
+			charset="utf8"
+			src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.js"
+		></script>
+		<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+		<script src="js/admin.js"></script>
+	</body>
+</html>
