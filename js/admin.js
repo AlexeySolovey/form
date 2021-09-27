@@ -163,7 +163,7 @@ $(document).ready(function () {
 	}
 
 	renderTable();
-	$("#dataTable").DataTable().clear().destroy();
+	// $("#dataTable").DataTable().clear().destroy();
 	//FETCH INITIAL WHIRPOOL HERE
 
 	$("#loginSubmit").on("click", () => {
