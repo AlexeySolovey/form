@@ -91,3 +91,12 @@ table.dataTable thead .sorting {
 	margin-bottom: 16px;
 	margin-top: 8px;
 }
+.loginError {
+	color: red;
+	margin-top: 8px;
+	font-size: 18px;
+	display: none;
+}
+.error + .loginError {
+	display: block;
+}

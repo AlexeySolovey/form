@@ -153,6 +153,9 @@ function exportReportToExcel() {
 		},
 	});
 }
+function fetchAndUpdate() {
+	//TODO
+}
 
 $(document).ready(function () {
 	if (sessionStorage.getItem("token")) {
@@ -161,13 +164,29 @@ $(document).ready(function () {
 
 	renderTable();
 	$("#dataTable").DataTable().clear().destroy();
-	renderTable(dataSet);
+	//FETCH INITIAL WHIRPOOL HERE
 
 	$("#loginSubmit").on("click", () => {
 		const userName = document.getElementById("username").value;
 		const password = document.getElementById("password").value;
-		//SET TOKEN HERE AFTER SENDING REQUEST
-		document.getElementById("loginForm").style.display = "none";
+		$.ajax({
+			type: "POST",
+			url: "../admin/login.php",
+			data: { user: userName, pass: password },
+			success: (data) => {
+				const result = JSON.parse(data);
+				if (result.status === "success") {
+					$("#loginSubmit").removeClass("error");
+					document.getElementById("loginForm").style.display = "none";
+					sessionStorage.setItem("token", result.token);
+				} else {
+					$("#loginSubmit").addClass("error");
+				}
+			},
+			error: () => {
+				$("#loginSubmit").addClass("error");
+			},
+		});
 	});
 
 	$("#dateFilter").on("click", () => {
@@ -188,13 +207,4 @@ $(document).ready(function () {
 		$("#dataTable").DataTable().clear().destroy();
 		renderTable(dataSet);
 	});
-
-	$.ajax({
-		type: "POST",
-		url: '../admin/login.php',
-		data: {user: 'admin', pass: 'admin'},
-		success: (data) => {
-			console.log(data);
-		},
-	  });
 });
