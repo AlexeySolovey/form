@@ -353,6 +353,7 @@ products = [
 	{ nc12: "859991635270", brand: "Whirlpool", model: "WHC20 T593 P" },
 	{ nc12: "859991573070", brand: "Whirlpool", model: "W7 921O K AQUA" },
 	{ nc12: "859991573320", brand: "Whirlpool", model: "W7 821O K" },
+	{ nc12: "859991571830", brand: "Whirlpool", model: "W9 921C OX" },
 	{ nc12: "859991630760", brand: "HOTPOINT", model: "HAC18 T311" },
 	{ nc12: "859991632440", brand: "HOTPOINT", model: "HAC20 T321" },
 ];
