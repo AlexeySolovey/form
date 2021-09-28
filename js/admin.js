@@ -1,6 +1,6 @@
 let results = [];
 let dataSet = [];
-let dataType = "Whirpool";
+let dataType = "whirpool";
 
 function objectsToArray(objs) {
 	return objs.map((e) => [
@@ -15,10 +15,9 @@ function objectsToArray(objs) {
 		e.purchasedate,
 		e.fiscalCheck,
 		e.shopname,
-		e.photodownload,
-		e.photo2download,
+		"https://mywhirlpool.com.ua/" + e.photodownload,
+		e.photo2download ? "https://mywhirlpool.com.ua/" + e.photo2download : "---",
 		// "<a href='" + e.photo + "'" + "target='blank'>" + e.photo + "</a>",
-		// e.photo,
 	]);
 }
 function renderTable(data) {
@@ -56,10 +55,6 @@ function resetTable() {
 	renderTable(dataSet);
 }
 function exportReportToExcel() {
-	// $("#dataTable tr td:last-of-type").each((i, e) => {
-	// 	console.log(e);
-	// 	$(e).attr("data-hyperlink", $(e).text());
-	// });
 	let table = document.getElementById("dataTable");
 	TableToExcel.convert(table, {
 		name: `export.xlsx`,
@@ -69,33 +64,34 @@ function exportReportToExcel() {
 	});
 }
 function fetchAndUpdate(token, type) {
-	fetch(
-		`https://mywhirlpool.com.ua/admin/receipt.php?type=${dataType}&token=${sessionStorage.getItem(
-			"token"
-		)}`
-	)
-		.then((data) => data.json())
-		.then((rows) => {
-			results = rows.data || [];
+	$.ajax({
+		type: "POST",
+		url: "https://mywhirlpool.com.ua/admin/receipt.php",
+		data: { token: sessionStorage.getItem("token"), type: dataType },
+		success: (data) => {
+			console.log(data);
+			results = JSON.parse(data).data || [];
 			dataSet = objectsToArray(results);
 			resetTable();
-		});
+		},
+	});
 }
 
 $(document).ready(function () {
 	if (sessionStorage.getItem("token")) {
 		$("#loginForm").hide();
-		fetch(
-			`https://mywhirlpool.com.ua/admin/receipt.php?type=${dataType}&token=${sessionStorage.getItem(
-				"token"
-			)}`
-		)
-			.then((data) => data.json())
-			.then((rows) => {
-				results = rows.data || [];
+
+		$.ajax({
+			type: "POST",
+			url: "https://mywhirlpool.com.ua/admin/receipt.php",
+			data: { token: sessionStorage.getItem("token"), type: dataType },
+			success: (data) => {
+				console.log(data);
+				results = JSON.parse(data).data || [];
 				dataSet = objectsToArray(results);
 				renderTable(dataSet);
-			});
+			},
+		});
 	}
 
 	$("#loginSubmit").on("click", () => {
