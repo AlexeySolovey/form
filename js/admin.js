@@ -1,94 +1,22 @@
-let results = [
-	{
-		id: 1,
-		fName: "Андрий",
-		lName: "Селезняк",
-		phone: "0993847563",
-		email: "равырав@gmail.com",
-		poshta: "Київ відділення такето",
-		serialNumber: "9485663754",
-		registrationDate: "2021-09-21",
-		purchaseDate: "2021-09-14",
-		fiscalNumber: "3353366757",
-		shopName: "Eldorado",
-		photo: null,
-	},
-	{
-		id: 2,
-		fName: "Сережка",
-		lName: "Запорожец",
-		phone: "0503847563",
-		email: "123акик23@gmail.com",
-		poshta: "Київ відділення такето",
-		serialNumber: "94485663754",
-		registrationDate: "2021-09-20",
-		purchaseDate: "2021-09-13",
-		fiscalNumber: "33533366757",
-		shopName: "фокстрот",
-		photo: null,
-	},
-	{
-		id: 3,
-		fName: "Максимка",
-		lName: "Шляпик",
-		phone: "0673847563",
-		email: "safsf2323@gmail.com",
-		poshta: "Київ відділення такето",
-		serialNumber: "94856863754",
-		registrationDate: "2021-09-19",
-		purchaseDate: "2021-09-12",
-		fiscalNumber: "33533866757",
-		shopName: "Eldorado",
-		photo: null,
-	},
-	{
-		id: 4,
-		fName: "Андрий",
-		lName: "Селезняк",
-		phone: "0993847563",
-		email: "равырав@gmail.com",
-		poshta: "Київ відділення такето",
-		serialNumber: "94856693754",
-		registrationDate: "2021-09-18",
-		purchaseDate: "2021-09-11",
-		fiscalNumber: "33533696757",
-		shopName: "Eldorado",
-		photo: null,
-	},
-	{
-		id: 5,
-		fName: "Сашко",
-		lName: "Зеленський",
-		phone: "0993847563",
-		email: "зеленюк@gmail.com",
-		poshta: "Київ відділення такето",
-		serialNumber: "948566223754",
-		registrationDate: "2021-09-17",
-		purchaseDate: "2021-09-10",
-		fiscalNumber: "335336556757",
-		shopName: "Eldorado",
-		photo: null,
-	},
-];
-
-let dataSet = objectsToArray(results);
+let results = [];
+let dataSet = [];
 let dataType = "Whirpool";
 
 function objectsToArray(objs) {
 	return objs.map((e) => [
 		e.id,
-		e.fName,
-		e.lName,
-		e.phone,
-		e.email,
-		e.poshta,
-		e.serialNumber,
-		e.registrationDate,
-		e.purchaseDate,
-		e.fiscalNumber,
-		e.shopName,
-		"<a href='https://madewithvuejs.com/enso-datatable' target='blank'>https://madewithvuejs.com/enso-datatable</a>",
-		e.photo2 || "",
+		e.firstname,
+		e.lastname,
+		e.userphone,
+		e.useremail,
+		e.department,
+		e.serialnumber,
+		e.submitted_on,
+		e.purchasedate,
+		e.fiscalCheck,
+		e.shopname,
+		e.photodownload,
+		e.photo2download,
 		// "<a href='" + e.photo + "'" + "target='blank'>" + e.photo + "</a>",
 		// e.photo,
 	]);
@@ -117,27 +45,14 @@ function filterByInterval(from, to) {
 	const f = new Date(from);
 	const t = new Date(to);
 	const filtered = results.filter((e) => {
-		const date = new Date(e.registrationDate);
+		const date = new Date(e.submitted_on);
 		return date <= t && date >= f;
 	});
+	console.log(filtered);
 	dataSet = objectsToArray(filtered);
 }
 function resetTable() {
 	$("#dataTable").DataTable().clear().destroy();
-	dataSet = results.map((e) => [
-		e.id,
-		e.fName,
-		e.lName,
-		e.phone,
-		e.email,
-		e.poshta,
-		e.serialNumber,
-		e.registrationDate,
-		e.purchaseDate,
-		e.fiscalNumber,
-		e.shopName,
-		e.photo,
-	]);
 	renderTable(dataSet);
 }
 function exportReportToExcel() {
@@ -153,18 +68,35 @@ function exportReportToExcel() {
 		},
 	});
 }
-function fetchAndUpdate() {
-	//TODO
+function fetchAndUpdate(token, type) {
+	fetch(
+		`https://mywhirlpool.com.ua/admin/receipt.php?type=${dataType}&token=${sessionStorage.getItem(
+			"token"
+		)}`
+	)
+		.then((data) => data.json())
+		.then((rows) => {
+			results = rows.data || [];
+			dataSet = objectsToArray(results);
+			resetTable();
+		});
 }
 
 $(document).ready(function () {
 	if (sessionStorage.getItem("token")) {
 		$("#loginForm").hide();
+		fetch(
+			`https://mywhirlpool.com.ua/admin/receipt.php?type=${dataType}&token=${sessionStorage.getItem(
+				"token"
+			)}`
+		)
+			.then((data) => data.json())
+			.then((rows) => {
+				results = rows.data || [];
+				dataSet = objectsToArray(results);
+				renderTable(dataSet);
+			});
 	}
-
-	renderTable();
-	// $("#dataTable").DataTable().clear().destroy();
-	//FETCH INITIAL WHIRPOOL HERE
 
 	$("#loginSubmit").on("click", () => {
 		const userName = document.getElementById("username").value;
@@ -179,6 +111,7 @@ $(document).ready(function () {
 					$("#loginSubmit").removeClass("error");
 					document.getElementById("loginForm").style.display = "none";
 					sessionStorage.setItem("token", result.token);
+					window.location.reload();
 				} else {
 					$("#loginSubmit").addClass("error");
 				}
@@ -203,8 +136,6 @@ $(document).ready(function () {
 	$("#exportFile").on("click", exportReportToExcel);
 	$("#dataType").on("input", () => {
 		dataType = document.getElementById("dataType").value;
-		///FETCH NEW DATA HERE
-		$("#dataTable").DataTable().clear().destroy();
-		renderTable(dataSet);
+		fetchAndUpdate();
 	});
 });
