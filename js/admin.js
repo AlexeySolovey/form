@@ -15,13 +15,16 @@ function objectsToArray(objs) {
 		e.purchasedate,
 		e.fiscalCheck,
 		e.shopname,
-		"https://mywhirlpool.com.ua/" + e.photodownload,
-		e.photo2download ? "https://mywhirlpool.com.ua/" + e.photo2download : "---",
-		// "<a href='" + e.photo + "'" + "target='blank'>" + e.photo + "</a>",
+		`<a target='blank' href='https://mywhirlpool.com.ua/${e.photodownload}'>https://mywhirlpool.com.ua/${e.photodownload}</a>`,
+		e.photo2download
+			? `<a target='blank' href='https://mywhirlpool.com.ua/${e.photo2download}'>https://mywhirlpool.com.ua/${e.photo2download}</a>`
+			: "---",
+		// e.photo2download ? "https://mywhirlpool.com.ua/" + e.photo2download : "---",
 	]);
 }
 function renderTable(data) {
 	$("#dataTable").DataTable({
+		paging: false,
 		data,
 		columns: [
 			{ title: "ID" },
@@ -47,7 +50,6 @@ function filterByInterval(from, to) {
 		const date = new Date(e.submitted_on);
 		return date <= t && date >= f;
 	});
-	console.log(filtered);
 	dataSet = objectsToArray(filtered);
 }
 function resetTable() {
@@ -69,7 +71,6 @@ function fetchAndUpdate(token, type) {
 		url: "https://mywhirlpool.com.ua/admin/receipt.php",
 		data: { token: sessionStorage.getItem("token"), type: dataType },
 		success: (data) => {
-			console.log(data);
 			results = JSON.parse(data).data || [];
 			dataSet = objectsToArray(results);
 			resetTable();
@@ -86,7 +87,6 @@ $(document).ready(function () {
 			url: "https://mywhirlpool.com.ua/admin/receipt.php",
 			data: { token: sessionStorage.getItem("token"), type: dataType },
 			success: (data) => {
-				console.log(data);
 				results = JSON.parse(data).data || [];
 				dataSet = objectsToArray(results);
 				renderTable(dataSet);
@@ -126,6 +126,7 @@ $(document).ready(function () {
 			filterByInterval(from, to);
 			renderTable(dataSet);
 		} else {
+			dataSet = objectsToArray(results);
 			resetTable();
 		}
 	});
