@@ -45,7 +45,8 @@ function renderTable(data) {
 function filterByInterval(from, to) {
 	const f = new Date(from);
 	const t = new Date(to);
-	t.setTime(t.getTime() + 1000 * 60 * 60 * 24);
+	f.setTime(f.getTime() - 1000 * 60 * 60 * 3);
+	t.setTime(t.getTime() + 1000 * 60 * 60 * 21);
 	const filtered = results.filter((e) => {
 		const date = new Date(e.submitted_on);
 		return date <= t && date >= f;
@@ -126,7 +127,9 @@ $(document).ready(function () {
 			$("#dataTable").DataTable().clear().destroy();
 			filterByInterval(from, to);
 			renderTable(dataSet);
+			$("#dateFilter").removeClass("error");
 		} else {
+			$("#dateFilter").addClass("error");
 			dataSet = objectsToArray(results);
 			resetTable();
 		}
