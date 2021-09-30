@@ -139,6 +139,7 @@ $(document).ready(function () {
 		dataType = document.getElementById("dataType").value;
 		fetchAndUpdate(() => {
 			$("#dateFilter").trigger("click");
+			$("#dateFilter").removeClass("error");
 		});
 	});
 });
