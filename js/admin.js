@@ -19,7 +19,6 @@ function objectsToArray(objs) {
 		e.photo2download
 			? `<a target='blank' href='https://mywhirlpool.com.ua/${e.photo2download}'>https://mywhirlpool.com.ua/${e.photo2download}</a>`
 			: "---",
-		// e.photo2download ? "https://mywhirlpool.com.ua/" + e.photo2download : "---",
 	]);
 }
 function renderTable(data) {
@@ -38,14 +37,16 @@ function renderTable(data) {
 			{ title: "Дата Придбання" },
 			{ title: "Номер Фіскального Чеку" },
 			{ title: "Назва Магазину" },
-			{ title: "Фото" },
-			{ title: "Фото2" },
+			{ title: "Чек" },
+			{ title: "ІПН" },
 		],
 	});
 }
 function filterByInterval(from, to) {
 	const f = new Date(from);
 	const t = new Date(to);
+	f.setTime(f.getTime() - 1000 * 60 * 60 * 3);
+	t.setTime(t.getTime() + 1000 * 60 * 60 * 21);
 	const filtered = results.filter((e) => {
 		const date = new Date(e.submitted_on);
 		return date <= t && date >= f;
@@ -65,7 +66,7 @@ function exportReportToExcel() {
 		},
 	});
 }
-function fetchAndUpdate(token, type) {
+function fetchAndUpdate(cb) {
 	$.ajax({
 		type: "POST",
 		url: "https://mywhirlpool.com.ua/admin/receipt.php",
@@ -74,6 +75,7 @@ function fetchAndUpdate(token, type) {
 			results = JSON.parse(data).data || [];
 			dataSet = objectsToArray(results);
 			resetTable();
+			if (cb) cb();
 		},
 	});
 }
@@ -125,7 +127,9 @@ $(document).ready(function () {
 			$("#dataTable").DataTable().clear().destroy();
 			filterByInterval(from, to);
 			renderTable(dataSet);
+			$("#dateFilter").removeClass("error");
 		} else {
+			$("#dateFilter").addClass("error");
 			dataSet = objectsToArray(results);
 			resetTable();
 		}
@@ -133,6 +137,8 @@ $(document).ready(function () {
 	$("#exportFile").on("click", exportReportToExcel);
 	$("#dataType").on("input", () => {
 		dataType = document.getElementById("dataType").value;
-		fetchAndUpdate();
+		fetchAndUpdate(() => {
+			$("#dateFilter").trigger("click");
+		});
 	});
 });

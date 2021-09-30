@@ -35,13 +35,18 @@
 
 		<div class="dateFilters">
 			<input
-				type="text"
+				type="date"
 				name="dateFrom"
 				id="dateFrom"
 				placeholder="yyyy-mm-dd"
 			/>
-			<input type="text" name="dateTo" id="dateTo" placeholder="yyyy-mm-dd" />
-			<button id="dateFilter">Пошук за інтервалом</button>
+			<input type="date" name="dateTo" id="dateTo" placeholder="yyyy-mm-dd" />
+			<div class="filter">
+				<button id="dateFilter">Пошук за інтервалом</button>
+				<p class="filterError">
+					Для пошуку за iнтервалом потрiбно вказати обидвi дати
+				</p>
+			</div>
 		</div>
 		<button id="exportFile">Завантажити у Excel</button>
 
