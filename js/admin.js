@@ -69,10 +69,15 @@ function exportReportToExcel() {
 function fetchAndUpdate(cb) {
 	$.ajax({
 		type: "POST",
-		url: "https://mywhirlpool.com.ua/admin/receipt.php",
+		url: "/admin/receipt.php",
 		data: { token: sessionStorage.getItem("token"), type: dataType },
 		success: (data) => {
-			results = JSON.parse(data).data || [];
+			const res = JSON.parse(data);
+			if (res.status === "error") {
+				sessionStorage.setItem("token", "");
+				window.location.reload();
+			}
+			results = res.data || [];
 			dataSet = objectsToArray(results);
 			resetTable();
 			if (cb) cb();
@@ -86,10 +91,15 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: "POST",
-			url: "https://mywhirlpool.com.ua/admin/receipt.php",
+			url: "/admin/receipt.php",
 			data: { token: sessionStorage.getItem("token"), type: dataType },
 			success: (data) => {
-				results = JSON.parse(data).data || [];
+				const res = JSON.parse(data);
+				if (res.status === "error") {
+					sessionStorage.setItem("token", "");
+					window.location.reload();
+				}
+				results = res.data || [];
 				dataSet = objectsToArray(results);
 				renderTable(dataSet);
 			},
@@ -106,8 +116,6 @@ $(document).ready(function () {
 			success: (data) => {
 				const result = JSON.parse(data);
 				if (result.status === "success") {
-					$("#loginSubmit").removeClass("error");
-					document.getElementById("loginForm").style.display = "none";
 					sessionStorage.setItem("token", result.token);
 					window.location.reload();
 				} else {
@@ -139,6 +147,7 @@ $(document).ready(function () {
 		dataType = document.getElementById("dataType").value;
 		fetchAndUpdate(() => {
 			$("#dateFilter").trigger("click");
+			$("#dateFilter").removeClass("error");
 		});
 	});
 });
