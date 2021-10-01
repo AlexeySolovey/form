@@ -69,7 +69,7 @@ function exportReportToExcel() {
 function fetchAndUpdate(cb) {
 	$.ajax({
 		type: "POST",
-		url: "https://mywhirlpool.com.ua/admin/receipt.php",
+		url: "/admin/receipt.php",
 		data: { token: sessionStorage.getItem("token"), type: dataType },
 		success: (data) => {
 			const res = JSON.parse(data);
@@ -91,7 +91,7 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: "POST",
-			url: "https://mywhirlpool.com.ua/admin/receipt.php",
+			url: "/admin/receipt.php",
 			data: { token: sessionStorage.getItem("token"), type: dataType },
 			success: (data) => {
 				const res = JSON.parse(data);
