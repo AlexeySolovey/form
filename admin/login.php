@@ -8,7 +8,7 @@ $response = array(
 
 
 if (isset($_POST)) {
-    if($_POST['user'] == 'admin' && $_POST['pass'] == 'admin') {
+    if($_POST['user'] == 'admin' && $_POST['pass'] == 'AJFjfhsaiHYfhs193HDc!') {
         $response['status'] = 'success';
         $response['message'] = 'токен надано!';
         $response['token'] = hash($hash_ver, date("m.d.y"), false);
