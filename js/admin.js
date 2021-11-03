@@ -1,6 +1,9 @@
 let results = [];
 let dataSet = [];
 let dataType = "whirpool";
+let whirpoolData = [];
+let silpoData = [];
+let indesitData = [];
 
 function objectsToArray(objs) {
 	return objs.map((e) => [
@@ -9,7 +12,15 @@ function objectsToArray(objs) {
 		e.lastname,
 		e.userphone,
 		e.useremail,
+		e.area,
+		e.city,
+		e.indexcity,
 		e.department,
+		e.is_send_news == "0" ? "Ні" : "Так",
+		e.instrument,
+		e.brand,
+		e.modelname,
+		e.nc12,
 		e.serialnumber,
 		e.submitted_on,
 		e.purchasedate,
@@ -31,7 +42,15 @@ function renderTable(data) {
 			{ title: "Прізвище" },
 			{ title: "Телефон" },
 			{ title: "E-Mail" },
+			{ title: "Область" },
+			{ title: "Місто" },
+			{ title: "Індекс" },
 			{ title: "Укр Пошта" },
+			{ title: "Згода" },
+			{ title: "Прилад" },
+			{ title: "Бренд" },
+			{ title: "Назва моделі" },
+			{ title: "Комерційний код(12nc)" },
 			{ title: "Серійний Номер" },
 			{ title: "Дата реєстрації" },
 			{ title: "Дата Придбання" },
@@ -69,10 +88,11 @@ function exportReportToExcel() {
 function fetchAndUpdate(cb) {
 	$.ajax({
 		type: "POST",
-		url: "/admin/receipt.php",
+		url: "https://www.mywhirlpool.com.ua/admin/receipt.php",
 		data: { token: sessionStorage.getItem("token"), type: dataType },
 		success: (data) => {
 			const res = JSON.parse(data);
+			console.log(res);
 			if (res.status === "error") {
 				sessionStorage.setItem("token", "");
 				window.location.reload();
@@ -91,10 +111,11 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: "POST",
-			url: "/admin/receipt.php",
+			url: "https://www.mywhirlpool.com.ua/admin/receipt.php",
 			data: { token: sessionStorage.getItem("token"), type: dataType },
 			success: (data) => {
 				const res = JSON.parse(data);
+				console.log(res);
 				if (res.status === "error") {
 					sessionStorage.setItem("token", "");
 					window.location.reload();
