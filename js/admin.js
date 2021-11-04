@@ -4,6 +4,10 @@ let dataType = "whirpool";
 let whirpoolData = [];
 let silpoData = [];
 let indesitData = [];
+let all = [];
+let wi = [];
+let ws = [];
+let is = [];
 
 function objectsToArray(objs) {
 	return objs.map((e) => [
@@ -61,6 +65,10 @@ function renderTable(data) {
 		],
 	});
 }
+function clearDate() {
+	document.getElementById("dateFrom").value = undefined;
+	document.getElementById("dateTo").value = undefined;
+}
 function filterByInterval(from, to) {
 	const f = new Date(from);
 	const t = new Date(to);
@@ -72,9 +80,9 @@ function filterByInterval(from, to) {
 	});
 	dataSet = objectsToArray(filtered);
 }
-function resetTable() {
+function resetTable(data) {
 	$("#dataTable").DataTable().clear().destroy();
-	renderTable(dataSet);
+	renderTable(data);
 }
 function exportReportToExcel() {
 	let table = document.getElementById("dataTable");
@@ -85,22 +93,18 @@ function exportReportToExcel() {
 		},
 	});
 }
-function fetchAndUpdate(cb) {
+function fetchAndUpdate(cb, type = "whirpool") {
 	$.ajax({
 		type: "POST",
 		url: "https://www.mywhirlpool.com.ua/admin/receipt.php",
-		data: { token: sessionStorage.getItem("token"), type: dataType },
+		data: { token: sessionStorage.getItem("token"), type: type },
 		success: (data) => {
 			const res = JSON.parse(data);
-			console.log(res);
 			if (res.status === "error") {
 				sessionStorage.setItem("token", "");
 				window.location.reload();
 			}
-			results = res.data || [];
-			dataSet = objectsToArray(results);
-			resetTable();
-			if (cb) cb();
+			if (cb) cb(res);
 		},
 	});
 }
@@ -109,22 +113,20 @@ $(document).ready(function () {
 	if (sessionStorage.getItem("token")) {
 		$("#loginForm").hide();
 
-		$.ajax({
-			type: "POST",
-			url: "https://www.mywhirlpool.com.ua/admin/receipt.php",
-			data: { token: sessionStorage.getItem("token"), type: dataType },
-			success: (data) => {
-				const res = JSON.parse(data);
-				console.log(res);
-				if (res.status === "error") {
-					sessionStorage.setItem("token", "");
-					window.location.reload();
-				}
-				results = res.data || [];
-				dataSet = objectsToArray(results);
-				renderTable(dataSet);
-			},
-		});
+		fetchAndUpdate((res) => {
+			whirpoolData = res.data || [];
+			dataSet = objectsToArray(whirpoolData);
+			results = whirpoolData;
+			renderTable(dataSet);
+		}, "whirpool");
+		fetchAndUpdate((res) => (indesitData = res.data || []), "indesit");
+		fetchAndUpdate((res) => {
+			silpoData = res.data || [];
+			all = [...whirpoolData, ...silpoData, ...indesitData];
+			wi = [...whirpoolData, ...indesitData];
+			ws = [...whirpoolData, ...silpoData];
+			is = [...indesitData, ...silpoData];
+		}, "silpo");
 	}
 
 	$("#loginSubmit").on("click", () => {
@@ -160,15 +162,51 @@ $(document).ready(function () {
 		} else {
 			$("#dateFilter").addClass("error");
 			dataSet = objectsToArray(results);
-			resetTable();
+			resetTable(dataSet);
 		}
 	});
 	$("#exportFile").on("click", exportReportToExcel);
 	$("#dataType").on("input", () => {
 		dataType = document.getElementById("dataType").value;
-		fetchAndUpdate(() => {
-			$("#dateFilter").trigger("click");
-			$("#dateFilter").removeClass("error");
-		});
+		$("#dateFilter").removeClass("error");
+		clearDate();
+
+		switch (dataType) {
+			case "whirpool":
+				results = whirpoolData;
+				dataSet = objectsToArray(whirpoolData);
+				resetTable(dataSet);
+				break;
+			case "indesit":
+				results = indesitData;
+				dataSet = objectsToArray(indesitData);
+				resetTable(dataSet);
+				break;
+			case "silpo":
+				results = silpoData;
+				dataSet = objectsToArray(silpoData);
+				resetTable(dataSet);
+				break;
+			case "wi":
+				results = wi;
+				dataSet = objectsToArray(results);
+				resetTable(dataSet);
+				break;
+			case "is":
+				results = is;
+				dataSet = objectsToArray(results);
+				resetTable(dataSet);
+				break;
+			case "ws":
+				results = ws;
+				dataSet = objectsToArray(results);
+				resetTable(dataSet);
+				break;
+			case "all":
+				results = all;
+				dataSet = objectsToArray(all);
+				resetTable(dataSet);
+				break;
+		}
 	});
 });
