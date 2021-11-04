@@ -96,7 +96,7 @@ function exportReportToExcel() {
 function fetchAndUpdate(cb, type = "whirpool") {
 	$.ajax({
 		type: "POST",
-		url: "https://www.mywhirlpool.com.ua/admin/receipt.php",
+		url: "/admin/receipt.php",
 		data: { token: sessionStorage.getItem("token"), type: type },
 		success: (data) => {
 			const res = JSON.parse(data);
