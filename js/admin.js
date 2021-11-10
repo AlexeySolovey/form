@@ -20,20 +20,20 @@ function objectsToArray(objs) {
 		e.city,
 		e.indexcity,
 		e.department,
-		e.is_send_news == "0" ? "Ні" : "Так",
 		e.instrument,
 		e.brand,
 		e.modelname,
 		e.nc12,
 		e.serialnumber,
-		e.submitted_on,
 		e.purchasedate,
 		e.fiscalCheck,
 		e.shopname,
+		e.submitted_on,
 		`<a target='blank' href='https://mywhirlpool.com.ua/${e.photodownload}'>https://mywhirlpool.com.ua/${e.photodownload}</a>`,
 		e.photo2download
 			? `<a target='blank' href='https://mywhirlpool.com.ua/${e.photo2download}'>https://mywhirlpool.com.ua/${e.photo2download}</a>`
 			: "---",
+		e.is_send_news == "0" ? "Ні" : "Так",
 	]);
 }
 function renderTable(data) {
@@ -44,24 +44,24 @@ function renderTable(data) {
 			{ title: "ID" },
 			{ title: "Ім'я" },
 			{ title: "Прізвище" },
-			{ title: "Телефон" },
+			{ title: "Номер телефону" },
 			{ title: "E-Mail" },
 			{ title: "Область" },
 			{ title: "Місто" },
 			{ title: "Індекс" },
-			{ title: "Укр Пошта" },
-			{ title: "Згода" },
-			{ title: "Прилад" },
+			{ title: "Адреса" },
+			{ title: "Вид Техніки" },
 			{ title: "Бренд" },
-			{ title: "Назва моделі" },
-			{ title: "Комерційний код(12nc)" },
+			{ title: "Модель" },
+			{ title: "Комерційний код" },
 			{ title: "Серійний Номер" },
-			{ title: "Дата реєстрації" },
 			{ title: "Дата Придбання" },
-			{ title: "Номер Фіскального Чеку" },
-			{ title: "Назва Магазину" },
+			{ title: "Номер Чека" },
+			{ title: "Магазин" },
+			{ title: "Дата реєстрації" },
 			{ title: "Чек" },
 			{ title: "ІПН" },
+			{ title: "Згода" },
 		],
 	});
 }
@@ -72,8 +72,8 @@ function clearDate() {
 function filterByInterval(from, to) {
 	const f = new Date(from);
 	const t = new Date(to);
-	f.setTime(f.getTime() - 1000 * 60 * 60 * 3);
-	t.setTime(t.getTime() + 1000 * 60 * 60 * 21);
+	f.setTime(f.getTime() - 1000 * 60 * 60 * 2);
+	t.setTime(t.getTime() + 1000 * 60 * 60 * 22);
 	const filtered = results.filter((e) => {
 		const date = new Date(e.submitted_on);
 		return date <= t && date >= f;
@@ -94,7 +94,7 @@ function exportReportToExcel() {
 	});
 }
 function fetchAndUpdate(cb, type = "whirpool") {
-	$.ajax({
+	return $.ajax({
 		type: "POST",
 		url: "/admin/receipt.php",
 		data: { token: sessionStorage.getItem("token"), type: type },
@@ -109,18 +109,18 @@ function fetchAndUpdate(cb, type = "whirpool") {
 	});
 }
 
-$(document).ready(function () {
+$(document).ready(async function () {
 	if (sessionStorage.getItem("token")) {
 		$("#loginForm").hide();
 
-		fetchAndUpdate((res) => {
+		await fetchAndUpdate((res) => {
 			whirpoolData = res.data || [];
 			dataSet = objectsToArray(whirpoolData);
 			results = whirpoolData;
 			renderTable(dataSet);
 		}, "whirpool");
-		fetchAndUpdate((res) => (indesitData = res.data || []), "indesit");
-		fetchAndUpdate((res) => {
+		await fetchAndUpdate((res) => (indesitData = res.data || []), "indesit");
+		await fetchAndUpdate((res) => {
 			silpoData = res.data || [];
 			all = [...whirpoolData, ...silpoData, ...indesitData];
 			wi = [...whirpoolData, ...indesitData];
