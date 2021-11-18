@@ -319,11 +319,22 @@ if (isset($_POST)) {
                     $body .= chunk_split(base64_encode($file2));
                     $body .= "\r\n--$boundary\r\n";
 
+                    if($name) $name = str_replace("'", "\'", $name);
+                    if($city) $city = str_replace("'", "\'", $city);
+                    if($lastname) $lastname = str_replace("'", "\'", $lastname);
+                    if($address) $address = str_replace("'", "\'", $address);
+                    if($department) $department = str_replace("'", "\'", $department);
+
                     // Insert form data in the database
                     $insert = $db->query("INSERT INTO sendform (firstname,lastname,userphone,useremail,area,city,indexcity,department,form_type,instrument,brand,modelname,nc12,serialnumber,purchasedate,fiscalCheck,shopname,photodownload,cost,photo2download,is_send_news) VALUES ('" . $name . "','" . $lastname . "','" . $phone . "','" . $address . "','" . $area . "','" . $city . "','" . $index . "','" . $department . "','" . $typePage . "','" . $_POST['instrument'] . "','" . $_POST['brand'] . "','" . $_POST['modelname'] . "','" . $nc12 . "','" . $serialnumber . "','" . $date . "','" . $fiscalCheck . "','" . $shopname . "','" . $newFileNamePath . "','" . $cost . "','" . $newFileNamePath2 . "','" . $isSendNews . "')");
                     if ($insert) {
                         $response['status'] = 'success';
                         $response['message'] = 'Дані у базу даних додано успішно';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Помилка збереження данних. Спробуйте ще раз!';
+                        echo json_encode($response);
+                        die(); 
                     }
 
                 } else {
