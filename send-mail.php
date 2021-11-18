@@ -324,6 +324,11 @@ if (isset($_POST)) {
                     if ($insert) {
                         $response['status'] = 'success';
                         $response['message'] = 'Дані у базу даних додано успішно';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Помилка збереження данних. Спробуйте ще раз!';
+                        echo json_encode($response);
+                        die(); 
                     }
 
                 } else {
